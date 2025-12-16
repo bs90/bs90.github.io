@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Du Lịch Ninh Bình & Hạ Long</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .language-selector select {
+            padding: 8px 12px;
+            border: 2px solid #d4a574;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            background: white;
+            color: #8b4513;
+            font-weight: bold;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 60px auto 0;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #d4a574;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            color: #8b4513;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .tour-section {
+            margin-bottom: 50px;
+            border-left: 5px solid #d4a574;
+            padding-left: 20px;
+            page-break-inside: avoid;
+        }
+        
+        .tour-image {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .tour-title {
+            color: #8b4513;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .tour-subtitle {
+            color: #e67e22;
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .schedule {
+            background: #faf5f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .time-item {
+            margin: 12px 0;
+            padding: 10px;
+            border-left: 3px solid #d4a574;
+            padding-left: 12px;
+        }
+        
+        .time {
+            font-weight: bold;
+            color: #8b4513;
+            display: inline-block;
+            min-width: 100px;
+        }
+        
+        .description {
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .pricing-table th {
+            background: #8b4513;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .pricing-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .pricing-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .price {
+            color: #e67e22;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .child-policy {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .policy-title {
+            font-weight: bold;
+            color: #8b4513;
+            margin-bottom: 10px;
+        }
+        
+        .policy-item {
+            margin: 8px 0;
+            padding-left: 20px;
+            font-size: 14px;
+        }
+        
+        .policy-item::before {
+            content: "✓ ";
+            color: #e67e22;
+            font-weight: bold;
+            margin-left: -15px;
+        }
+        
+        .includes-excludes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .box {
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .includes {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .excludes {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+        }
+        
+        .box-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        
+        .includes .box-title {
+            color: #2e7d32;
+        }
+        
+        .excludes .box-title {
+            color: #c62828;
+        }
+        
+        .box-item {
+            font-size: 13px;
+            margin: 6px 0;
+            padding-left: 15px;
+        }
+        
+        .box-item::before {
+            content: "• ";
+            margin-left: -10px;
+            font-weight: bold;
+        }
+        
+        .includes .box-item::before {
+            color: #4caf50;
+        }
+        
+        .excludes .box-item::before {
+            color: #f44336;
+        }
+        
+        .footer {
+            border-top: 2px solid #d4a574;
+            padding-top: 20px;
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .note {
+            background: #fffacd;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: #8b7500;
+            border-left: 4px solid #ffd700;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            .language-selector {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="language-selector">
+        <select id="langSelect" onchange="changeLanguage(this.value)">
+            <option value="vi">🇻🇳 Tiếng Việt</option>
+            <option value="en">🇺🇸 English</option>
+            <option value="ja">🇯🇵 日本語</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 id="header-title">📍 TOUR DU LỊCH HÀNG NGÀY</h1>
+            <p class="subtitle" id="header-subtitle">Ninh Bình - Hạ Long - Trải nghiệm kỳ quan thiên nhiên Việt Nam</p>
+        </header>
+
+        <!-- TOUR 1: BÁI ĐÍNH - TRÀNG AN - HANG MÚA -->
+        <div class="tour-section">
+            <img src="https://pystravel.vn/_next/image?url=https%3A%2F%2Fobjectstorage.omzcloud.vn%2Fpys-object-storage%2Fweb%2Fuploads%2Fposts%2Falbums%2F8%2F9456fe40364d9167df75ae7b1c785753.jpg&w=1080&q=75" alt="Chùa Bái Đính" class="tour-image">
+            <h2 class="tour-title" id="tour1-title">🏯 TOUR 1: BÁI ĐÍNH - TRÀNG AN - HANG MÚA</h2>
+            <p class="tour-subtitle" id="tour1-subtitle">Khám phá Chùa Lớn Nhất Đông Nam Á - 1 Ngày</p>
+            
+            <div class="schedule" id="tour1-schedule">
+                <div class="time-item">
+                    <span class="time">07:15 - 07:30</span>
+                    <span class="description" id="s1-1">Xe và hướng dẫn viên đón quý khách tại phố cổ Hà Nội hoặc Nhà Hát Lớn, khởi hành đi Ninh Bình</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">09:15</span>
+                    <span class="description" id="s1-2">Dừng chân nghỉ giải lao 20 phút</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">10:30</span>
+                    <span class="description" id="s1-3">Thăm quan Chùa Bái Đính - chùa lớn nhất Đông Nam Á (>700 ha) với 500 tượng Phật La Hán, tượng Phật Thích Ca 100 tấn đồng, chuông 36 tấn đồng</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">12:30</span>
+                    <span class="description" id="s1-4">Ăn trưa tại nhà hàng địa phương với đặc sản: thịt dê, cơm cháy...</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">13:30</span>
+                    <span class="description" id="s1-5">Đi thuyền thăm quan Tràng An - Di sản Thiên Nhiên Thế Giới (UNESCO 2014), nổi tiếng hệ thống hang động tuyệt đẹp, phim trường King Kong (2016) - 2 giờ chiêm ngưỡng bằng đò chèo</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">16:00</span>
+                    <span class="description" id="s1-6">Thăm Hang Múa - đỉnh cao nhất Tam Cốc. Vượt qua ~500 bậc đá, ngắm khung cảnh tuyệt đẹp từ trên cao</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">17:30</span>
+                    <span class="description" id="s1-7">Lên xe quay về Hà Nội</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">19:30</span>
+                    <span class="description" id="s1-8">Kết thúc chương trình tour</span>
+                </div>
+            </div>
+
+            <h3 style="color: #8b4513; margin-top: 20px; margin-bottom: 10px;" id="pricing-label-1">💰 Bảng Giá (2 Người Lớn & 2 Trẻ Em)</h3>
+            <table class="pricing-table">
+                <thead>
+                    <tr>
+                        <th id="col-type">Đối Tượng</th>
+                        <th id="col-price">Mức Giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="adult">Người lớn</td>
+                        <td class="price">142 USD/khách</td>
+                    </tr>
+                    <tr>
+                        <td id="child5">Trẻ em 5 tuổi</td>
+                        <td class="price">107 USD/khách</td>
+                    </tr>
+                    <tr>
+                        <td id="child3">Trẻ em 3 tuổi</td>
+                        <td class="price" id="price-free">Miễn phí</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="child-policy">
+                <div class="policy-title" id="child-policy-title">👶 Chính Sách Trẻ Em</div>
+                <div class="policy-item" id="cp1">1-4 tuổi: Miễn phí, sử dụng chung dịch vụ cùng bố mẹ, tự chi trả chi phí phát sinh</div>
+                <div class="policy-item" id="cp2">5-8 tuổi: Tính 75% giá tour (áp dụng cho 1 trẻ, từ trẻ thứ 2 tính 100%)</div>
+                <div class="policy-item" id="cp3">9 tuổi trở lên: Tính như người lớn</div>
+            </div>
+
+            <div class="includes-excludes">
+                <div class="box includes">
+                    <div class="box-title" id="includes-title">✅ TOUR BAO GỒM</div>
+                    <div class="box-item" id="inc1">Xe riêng 7 chỗ (đón trả phố cổ)</div>
+                    <div class="box-item" id="inc2">Hướng dẫn viên tiếng Nhật</div>
+                    <div class="box-item" id="inc3">Vé thăm quan suốt chương trình</div>
+                    <div class="box-item" id="inc4">Vé thuyền Tràng An</div>
+                    <div class="box-item" id="inc5">Ăn trưa tại nhà hàng địa phương</div>
+                    <div class="box-item" id="inc6">Nước suối trên xe (1 chai/người)</div>
+                </div>
+                <div class="box excludes">
+                    <div class="box-title" id="excludes-title">❌ TOUR KHÔNG BAO GỒM</div>
+                    <div class="box-item" id="exc1">8% VAT</div>
+                    <div class="box-item" id="exc2">Đồ uống trong bữa ăn</div>
+                    <div class="box-item" id="exc3">Tiền thưởng hướng dẫn viên & lái xe</div>
+                    <div class="box-item" id="exc4">Chi phí cá nhân</div>
+                    <div class="box-item" id="exc5">Bảo hiểm</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOUR 2: HẠ LONG -->
+        <div class="tour-section">
+            <img src="https://media-cdn-v2.laodong.vn/storage/newsportal/2023/7/10/1214906/Ha-Long.jpeg" alt="Vịnh Hạ Long" class="tour-image">
+            <h2 class="tour-title" id="tour2-title">⛵ TOUR 2: HÀ NỘI - HẠ LONG</h2>
+            <p class="tour-subtitle" id="tour2-subtitle">Di Sản Thiên Nhiên Thế Giới - 1 Ngày 6 Tiếng (Hang Sửng Sốt - Đảo Ti Tốp - Hang Luồn)</p>
+            
+            <div class="schedule" id="tour2-schedule">
+                <div class="time-item">
+                    <span class="time">08:00 - 08:45</span>
+                    <span class="description" id="s2-1">Xe và hướng dẫn viên đón quý khách, khởi hành qua cao tốc Hà Nội - Hải Phòng - Tuần Châu (2,5 giờ di chuyển)</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">09:15</span>
+                    <span class="description" id="s2-2">Dừng 30 phút để nghỉ ngơi, thư giãn</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">11:45</span>
+                    <span class="description" id="s2-3">Đến bến cảng tàu Tuần Châu, lên tàu khám phá Vịnh Hạ Long - Di sản Thiên Nhiên Thế Giới UNESCO (2 lần công nhận) và 1 trong 7 kỳ quan thiên nhiên thế giới</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">12:30</span>
+                    <span class="description" id="s2-4">Thưởng thức bữa trưa trên tàu với các đặc sản địa phương, ngắm cảnh vịnh</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">14:00</span>
+                    <span class="description" id="s2-5">Đến đảo Bồ Hòn, thăm Hang Sửng Sốt - một trong những hang động lớn và đẹp nhất vịnh Hạ Long (~10,000 m²) với vô số nhũ đá và thạch đá lung linh</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">14:45</span>
+                    <span class="description" id="s2-6">Trải nghiệm chèo thuyền kayak hoặc đi thuyền nan thăm Hang Luồn</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">15:15</span>
+                    <span class="description" id="s2-7">Đến Đảo Ti Tốp - tắm biển tại bãi cát trắng hoặc leo đỉnh núi ngắm toàn cảnh vịnh Hạ Long</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">16:30</span>
+                    <span class="description" id="s2-8">Quay lại tàu, thưởng thức tiệc sunset + rượu vang + hoa quả</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">18:30</span>
+                    <span class="description" id="s2-9">Về cảng Tuần Châu, lên xe về Hà Nội</span>
+                </div>
+                <div class="time-item">
+                    <span class="time">21:00 - 21:30</span>
+                    <span class="description" id="s2-10">Về đến Hà Nội - kết thúc chương trình</span>
+                </div>
+            </div>
+
+            <h3 style="color: #8b4513; margin-top: 20px; margin-bottom: 10px;" id="pricing-label-2">💰 Bảng Giá (2 Người Lớn & 2 Trẻ Em)</h3>
+            <table class="pricing-table">
+                <thead>
+                    <tr>
+                        <th id="col-type2">Đối Tượng</th>
+                        <th id="col-price2">Mức Giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="adult2">Người lớn</td>
+                        <td class="price">158 USD/khách</td>
+                    </tr>
+                    <tr>
+                        <td id="child5-2">Trẻ em 5 tuổi</td>
+                        <td class="price">119 USD/khách</td>
+                    </tr>
+                    <tr>
+                        <td id="child3-2">Trẻ em 3 tuổi</td>
+                        <td class="price" id="price-free2">Miễn phí</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="note" id="note">
+                <strong>📝 Ghi Chú:</strong> Xe riêng 7 chỗ, guide riêng, tàu ghép (không phải tàu riêng)
+            </div>
+
+            <div class="child-policy">
+                <div class="policy-title" id="child-policy-title2">👶 Chính Sách Trẻ Em</div>
+                <div class="policy-item" id="cp4">1-4 tuổi: Miễn phí, sử dụng chung dịch vụ cùng bố mẹ, tự chi trả chi phí phát sinh</div>
+                <div class="policy-item" id="cp5">5-8 tuổi: Tính 75% giá tour (áp dụng cho 1 trẻ, từ trẻ thứ 2 tính 100%)</div>
+                <div class="policy-item" id="cp6">9 tuổi trở lên: Tính như người lớn</div>
+            </div>
+
+            <div class="includes-excludes">
+                <div class="box includes">
+                    <div class="box-title" id="includes-title2">✅ TOUR BAO GỒM</div>
+                    <div class="box-item" id="inc7">Xe riêng 7 chỗ đi Hạ Long</div>
+                    <div class="box-item" id="inc8">Hướng dẫn viên tiếng Nhật</div>
+                    <div class="box-item" id="inc9">Ăn trưa trên tàu</div>
+                    <div class="box-item" id="inc10">Vé tham quan các điểm</div>
+                    <div class="box-item" id="inc11">Chèo kayak/thuyền nan Hang Luồn</div>
+                    <div class="box-item" id="inc12">Khăn tắm bãi biển</div>
+                    <div class="box-item" id="inc13">Tiệc trà chiều (sunset party)</div>
+                    <div class="box-item" id="inc14">Nước suối (1 chai/người)</div>
+                </div>
+                <div class="box excludes">
+                    <div class="box-title" id="excludes-title2">❌ TOUR KHÔNG BAO GỒM</div>
+                    <div class="box-item" id="exc6">8% VAT</div>
+                    <div class="box-item" id="exc7">Đồ uống trong bữa trưa</div>
+                    <div class="box-item" id="exc8">Chi phí cá nhân</div>
+                    <div class="box-item" id="exc9">Tiền típ hướng dẫn viên & lái xe</div>
+                    <div class="box-item" id="exc10">Bảo hiểm</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p id="footer-1">📞 Liên hệ: Hướng dẫn viên tiếng Nhật | 📧 Email: [Thông tin liên hệ]</p>
+            <p id="footer-2">✨ Trải nghiệm tour tuyệt vời cùng chúng tôi - Hãy gọi ngay để đặt tour! ✨</p>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                "header-title": "📍 TOUR DU LỊCH HÀNG NGÀY",
+                "header-subtitle": "Ninh Bình - Hạ Long - Trải nghiệm kỳ quan thiên nhiên Việt Nam",
+                "tour1-title": "🏯 TOUR 1: BÁI ĐÍNH - TRÀNG AN - HANG MÚA",
+                "tour1-subtitle": "Khám phá Chùa Lớn Nhất Đông Nam Á - 1 Ngày",
+                "s1-1": "Xe và hướng dẫn viên đón quý khách tại phố cổ Hà Nội hoặc Nhà Hát Lớn, khởi hành đi Ninh Bình",
+                "s1-2": "Dừng chân nghỉ giải lao 20 phút",
+                "s1-3": "Thăm quan Chùa Bái Đính - chùa lớn nhất Đông Nam Á (>700 ha) với 500 tượng Phật La Hán, tượng Phật Thích Ca 100 tấn đồng, chuông 36 tấn đồng",
+                "s1-4": "Ăn trưa tại nhà hàng địa phương với đặc sản: thịt dê, cơm cháy...",
+                "s1-5": "Đi thuyền thăm quan Tràng An - Di sản Thiên Nhiên Thế Giới (UNESCO 2014), nổi tiếng hệ thống hang động tuyệt đẹp, phim trường King Kong (2016) - 2 giờ chiêm ngưỡng bằng đò chèo",
+                "s1-6": "Thăm Hang Múa - đỉnh cao nhất Tam Cốc. Vượt qua ~500 bậc đá, ngắm khung cảnh tuyệt đẹp từ trên cao",
+                "s1-7": "Lên xe quay về Hà Nội",
+                "s1-8": "Kết thúc chương trình tour",
+                "pricing-label-1": "💰 Bảng Giá (2 Người Lớn & 2 Trẻ Em)",
+                "col-type": "Đối Tượng",
+                "col-price": "Mức Giá",
+                "adult": "Người lớn",
+                "child5": "Trẻ em 5 tuổi",
+                "child3": "Trẻ em 3 tuổi",
+                "price-free": "Miễn phí",
+                "child-policy-title": "👶 Chính Sách Trẻ Em",
+                "cp1": "1-4 tuổi: Miễn phí, sử dụng chung dịch vụ cùng bố mẹ, tự chi trả chi phí phát sinh",
+                "cp2": "5-8 tuổi: Tính 75% giá tour (áp dụng cho 1 trẻ, từ trẻ thứ 2 tính 100%)",
+                "cp3": "9 tuổi trở lên: Tính như người lớn",
+                "includes-title": "✅ TOUR BAO GỒM",
+                "inc1": "Xe riêng 7 chỗ (đón trả phố cổ)",
+                "inc2": "Hướng dẫn viên tiếng Nhật",
+                "inc3": "Vé thăm quan suốt chương trình",
+                "inc4": "Vé thuyền Tràng An",
+                "inc5": "Ăn trưa tại nhà hàng địa phương",
+                "inc6": "Nước suối trên xe (1 chai/người)",
+                "excludes-title": "❌ TOUR KHÔNG BAO GỒM",
+                "exc1": "8% VAT",
+                "exc2": "Đồ uống trong bữa ăn",
+                "exc3": "Tiền thưởng hướng dẫn viên & lái xe",
+                "exc4": "Chi phí cá nhân",
+                "exc5": "Bảo hiểm",
+                "tour2-title": "⛵ TOUR 2: HÀ NỘI - HẠ LONG",
+                "tour2-subtitle": "Di Sản Thiên Nhiên Thế Giới - 1 Ngày 6 Tiếng (Hang Sửng Sốt - Đảo Ti Tốp - Hang Luồn)",
+                "s2-1": "Xe và hướng dẫn viên đón quý khách, khởi hành qua cao tốc Hà Nội - Hải Phòng - Tuần Châu (2,5 giờ di chuyển)",
+                "s2-2": "Dừng 30 phút để nghỉ ngơi, thư giãn",
+                "s2-3": "Đến bến cảng tàu Tuần Châu, lên tàu khám phá Vịnh Hạ Long - Di sản Thiên Nhiên Thế Giới UNESCO (2 lần công nhận) và 1 trong 7 kỳ quan thiên nhiên thế giới",
+                "s2-4": "Thưởng thức bữa trưa trên tàu với các đặc sản địa phương, ngắm cảnh vịnh",
+                "s2-5": "Đến đảo Bồ Hòn, thăm Hang Sửng Sốt - một trong những hang động lớn và đẹp nhất vịnh Hạ Long (~10,000 m²) với vô số nhũ đá và thạch đá lung linh",
+                "s2-6": "Trải nghiệm chèo thuyền kayak hoặc đi thuyền nan thăm Hang Luồn",
+                "s2-7": "Đến Đảo Ti Tốp - tắm biển tại bãi cát trắng hoặc leo đỉnh núi ngắm toàn cảnh vịnh Hạ Long",
+                "s2-8": "Quay lại tàu, thưởng thức tiệc sunset + rượu vang + hoa quả",
+                "s2-9": "Về cảng Tuần Châu, lên xe về Hà Nội",
+                "s2-10": "Về đến Hà Nội - kết thúc chương trình",
+                "pricing-label-2": "💰 Bảng Giá (2 Người Lớn & 2 Trẻ Em)",
+                "col-type2": "Đối Tượng",
+                "col-price2": "Mức Giá",
+                "adult2": "Người lớn",
+                "child5-2": "Trẻ em 5 tuổi",
+                "child3-2": "Trẻ em 3 tuổi",
+                "price-free2": "Miễn phí",
+                "note": "📝 Ghi Chú: Xe riêng 7 chỗ, guide riêng, tàu ghép (không phải tàu riêng)",
+                "inc7": "Xe riêng 7 chỗ đi Hạ Long",
+                "inc8": "Hướng dẫn viên tiếng Nhật",
+                "inc9": "Ăn trưa trên tàu",
+                "inc10": "Vé tham quan các điểm",
+                "inc11": "Chèo kayak/thuyền nan Hang Luồn",
+                "inc12": "Khăn tắm bãi biển",
+                "inc13": "Tiệc trà chiều (sunset party)",
+                "inc14": "Nước suối (1 chai/người)",
+                "exc6": "8% VAT",
+                "exc7": "Đồ uống trong bữa trưa",
+                "exc8": "Chi phí cá nhân",
+                "exc9": "Tiền típ hướng dẫn viên & lái xe",
+                "exc10": "Bảo hiểm",
+                "footer-1": "📞 Liên hệ: Hướng dẫn viên tiếng Nhật | 📧 Email: [Thông tin liên hệ]",
+                "footer-2": "✨ Trải nghiệm tour tuyệt vời cùng chúng tôi - Hãy gọi ngay để đặt tour! ✨"
+            },
+            en: {
+                "header-title": "📍 DAILY TOUR PACKAGES",
+                "header-subtitle": "Ninh Binh - Ha Long - Experience Vietnam's natural wonders",
+                "tour1-title": "🏯 TOUR 1: BAI DINH - TRANG AN - HANG MUA",
+                "tour1-subtitle": "Discover Southeast Asia's Largest Temple - 1 Day",
+                "s1-1": "Vehicle and guide pick up guests at Hanoi Old Quarter or Opera House, depart to Ninh Binh",
+                "s1-2": "Stop for 20-minute rest break",
+                "s1-3": "Visit Bai Dinh Temple - Southeast Asia's largest temple (>700 ha) with 500 Arhat Buddha statues, 100-ton bronze Buddha, 36-ton bronze bell",
+                "s1-4": "Lunch at local restaurant with specialties: goat meat, crispy rice...",
+                "s1-5": "Boat tour of Trang An - UNESCO World Natural Heritage (2014), famous for beautiful cave systems, King Kong filming site (2016) - 2 hours by traditional rowboat",
+                "s1-6": "Visit Hang Mua - highest peak of Tam Coc. Climb ~500 stone steps for stunning views from above",
+                "s1-7": "Board vehicle and return to Hanoi",
+                "s1-8": "End of tour",
+                "pricing-label-1": "💰 Price List (2 Adults & 2 Children)",
+                "col-type": "Type",
+                "col-price": "Price",
+                "adult": "Adult",
+                "child5": "Child age 5",
+                "child3": "Child age 3",
+                "price-free": "Free",
+                "child-policy-title": "👶 Child Policy",
+                "cp1": "Ages 1-4: Free, share service with parents, pay for additional fees if any",
+                "cp2": "Ages 5-8: 75% of tour price (applies to 1 child, from 2nd child 100% price)",
+                "cp3": "Age 9+: Same as adult",
+                "includes-title": "✅ TOUR INCLUDES",
+                "inc1": "Private 7-seater vehicle (pickup/drop-off)",
+                "inc2": "Japanese-speaking guide",
+                "inc3": "All entrance fees throughout program",
+                "inc4": "Trang An boat ticket",
+                "inc5": "Lunch at local restaurant",
+                "inc6": "Bottled water on vehicle (1 bottle/person)",
+                "excludes-title": "❌ TOUR EXCLUDES",
+                "exc1": "8% VAT",
+                "exc2": "Drinks during meals",
+                "exc3": "Tips for guide & driver",
+                "exc4": "Personal expenses",
+                "exc5": "Travel insurance",
+                "tour2-title": "⛵ TOUR 2: HANOI - HA LONG",
+                "tour2-subtitle": "UNESCO World Natural Heritage - 1 Day 6 Hours (Sung Sot Cave - Ti Top Island - Luon Cave)",
+                "s2-1": "Vehicle and guide pick up guests, depart via Hanoi-Haiphong-Tuan Chau highway (2.5 hours)",
+                "s2-2": "Stop 30 minutes for rest and relaxation",
+                "s2-3": "Arrive at Tuan Chau port, board cruise to explore Ha Long Bay - UNESCO World Natural Heritage (2 times recognized) and 1 of 7 world natural wonders",
+                "s2-4": "Enjoy lunch on cruise with local specialties, admire bay scenery",
+                "s2-5": "Visit Bo Hon Island, explore Sung Sot Cave - one of largest and most beautiful caves (~10,000 m²) with countless stalactites and stalagmites",
+                "s2-6": "Experience kayaking or boat ride through Luon Cave",
+                "s2-7": "Visit Ti Top Island - swim at white sandy beach or climb peak for panoramic Ha Long Bay views",
+                "s2-8": "Return to cruise, enjoy sunset party with wine and fresh fruits",
+                "s2-9": "Return to Tuan Chau port, board vehicle back to Hanoi",
+                "s2-10": "Arrive in Hanoi - end of tour",
+                "pricing-label-2": "💰 Price List (2 Adults & 2 Children)",
+                "col-type2": "Type",
+                "col-price2": "Price",
+                "adult2": "Adult",
+                "child5-2": "Child age 5",
+                "child3-2": "Child age 3",
+                "price-free2": "Free",
+                "note": "📝 Note: Private 7-seater, private guide, shared cruise (not private cruise)",
+                "inc7": "Private 7-seater to Ha Long",
+                "inc8": "Japanese-speaking guide",
+                "inc9": "Lunch on cruise",
+                "inc10": "All entrance fees",
+                "inc11": "Kayaking/boat ride through Luon Cave",
+                "inc12": "Beach towel",
+                "inc13": "Afternoon tea (sunset party)",
+                "inc14": "Bottled water (1 bottle/person)",
+                "exc6": "8% VAT",
+                "exc7": "Drinks during lunch",
+                "exc8": "Personal expenses",
+                "exc9": "Tips for guide & driver",
+                "exc10": "Travel insurance",
+                "footer-1": "📞 Contact: Japanese-speaking guide | 📧 Email: [Contact information]",
+                "footer-2": "✨ Enjoy great tour experiences with us - Call now to book! ✨"
+            },
+            ja: {
+                "header-title": "📍 毎日ツアーパッケージ",
+                "header-subtitle": "ニンビン - ハロン湾 - ベトナムの自然の不思議を体験",
+                "tour1-title": "🏯 ツアー1: バイディン - トランアン - ハングア",
+                "tour1-subtitle": "東南アジア最大の寺院を発見 - 1日",
+                "s1-1": "ハノイ旧市街またはオペラハウスでゲストを迎え、ニンビンへ出発",
+                "s1-2": "20分間の休憩",
+                "s1-3": "バイディン寺院を訪問 - 東南アジア最大の寺院(700ヘクタール以上)、500体の羅漢仏像、100トンの青銅製釈迦牟尼像、36トンの青銅鐘",
+                "s1-4": "地元のレストランで昼食 - ヤギ肉、焦げたご飯など",
+                "s1-5": "トランアン川のボートツアー - ユネスコ世界自然遺産(2014年)、美しい洞窟システムで有名、キングコング撮影地(2016年) - 伝統的な手漕ぎボートで2時間",
+                "s1-6": "ハングア - タムコックの最高峰を訪問。約500段の石段を上り、上から素晴らしい景色を眺める",
+                "s1-7": "車に乗ってハノイに帰還",
+                "s1-8": "ツアー終了",
+                "pricing-label-1": "💰 料金表(大人2名と子供2名)",
+                "col-type": "種類",
+                "col-price": "料金",
+                "adult": "大人",
+                "child5": "5歳の子供",
+                "child3": "3歳の子供",
+                "price-free": "無料",
+                "child-policy-title": "👶 子供政策",
+                "cp1": "1〜4歳：無料、親と同じサービスを使用、追加料金は自己負担",
+                "cp2": "5〜8歳：ツアー料金の75%(1人の子供に適用、2人目からは100%)",
+                "cp3": "9歳以上：大人と同じ",
+                "includes-title": "✅ ツアーに含まれるもの",
+                "inc1": "プライベート7人乗り車(送迎)",
+                "inc2": "日本語ガイド",
+                "inc3": "プログラム全体の入場料",
+                "inc4": "トランアンボートチケット",
+                "inc5": "地元レストランでの昼食",
+                "inc6": "車内の水(1人1本)",
+                "excludes-title": "❌ ツアーに含まれないもの",
+                "exc1": "8% VAT",
+                "exc2": "食事中の飲料",
+                "exc3": "ガイド&ドライバーへのチップ",
+                "exc4": "個人的な経費",
+                "exc5": "旅行保険",
+                "tour2-title": "⛵ ツアー2: ハノイ - ハロン湾",
+                "tour2-subtitle": "ユネスコ世界自然遺産 - 1日6時間(スンソット洞窟 - ティトップ島 - ルオン洞窟)",
+                "s2-1": "ゲストを迎え、ハノイ-ハイフォン-トゥアンチャウハイウェイ経由で出発(2.5時間)",
+                "s2-2": "30分休憩",
+                "s2-3": "トゥアンチャウ港に到着、ハロン湾をクルーズ - ユネスコ世界自然遺産(2回認定)と世界の7つの自然の不思議の1つ",
+                "s2-4": "クルーズで昼食を楽しむ、湾の景色を眺める",
+                "s2-5": "ボーホン島を訪問、スンソット洞窟を探検 - 最大最美の洞窟の1つ(約10,000平方メートル)、数え切れない石筍と鍾乳石",
+                "s2-6": "カヤックまたはボートでルオン洞窟を体験",
+                "s2-7": "ティトップ島を訪問 - 白い砂浜で泳ぐか、頂上に登ってハロン湾の全景を眺める",
+                "s2-8": "クルーズに戻り、ワインとフルーツ付きのサンセットパーティーを楽しむ",
+                "s2-9": "トゥアンチャウ港に戻り、ハノイへの車に乗る",
+                "s2-10": "ハノイに到着 - ツアー終了",
+                "pricing-label-2": "💰 料金表(大人2名と子供2名)",
+                "col-type2": "種類",
+                "col-price2": "料金",
+                "adult2": "大人",
+                "child5-2": "5歳の子供",
+                "child3-2": "3歳の子供",
+                "price-free2": "無料",
+                "note": "📝 注意：プライベート7人乗り、プライベートガイド、共用クルーズ(プライベートではない)",
+                "inc7": "ハロン湾へのプライベート7人乗り",
+                "inc8": "日本語ガイド",
+                "inc9": "クルーズでの昼食",
+                "inc10": "全入場料",
+                "inc11": "カヤック/ボートツアー(ルオン洞窟)",
+                "inc12": "ビーチタオル",
+                "inc13": "午後の茶(サンセットパーティー)",
+                "inc14": "ボトル水(1人1本)",
+                "exc6": "8% VAT",
+                "exc7": "昼食中の飲料",
+                "exc8": "個人的な経費",
+                "exc9": "ガイド&ドライバーへのチップ",
+                "exc10": "旅行保険",
+                "footer-1": "📞 連絡先：日本語ガイド | 📧 メール：[連絡先情報]",
+                "footer-2": "✨ 素晴らしいツアー体験をお楽しみください - 今すぐ予約してください！ ✨"
+            }
+        };
+
+        function changeLanguage(lang) {
+            Object.keys(translations[lang]).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = translations[lang][id];
+                }
+            });
+        }
+    </script>
+</body>
+</html>
