@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Cosmic Defense - VR Space Shooter</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      overflow: hidden;
+      background: #000;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #fff;
+      touch-action: none;
+    }
+    canvas { display: block; }
+
+    /* HUD Overlay (non-VR) */
+    #hud {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      padding: 15px 20px;
+      z-index: 100;
+      pointer-events: none;
+      display: none;
+    }
+    #hud-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #score {
+      font-size: clamp(16px, 3.5vw, 28px);
+      color: #00ffff;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    #wave {
+      font-size: clamp(14px, 3vw, 24px);
+      color: #ffaa00;
+      text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    #health-bar {
+      margin-top: 8px;
+      width: 100%;
+      height: clamp(6px, 1.5vw, 12px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    #health-fill {
+      height: 100%;
+      width: 100%;
+      background: #00ff88;
+      transition: width 0.3s ease, background-color 0.3s ease;
+      border-radius: 6px;
+    }
+
+    /* Wave Announcement */
+    #wave-announce {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(32px, 8vw, 72px);
+      font-weight: bold;
+      color: #ffaa00;
+      text-shadow: 0 0 30px rgba(255, 170, 0, 0.8), 0 0 60px rgba(255, 170, 0, 0.4);
+      letter-spacing: 6px;
+      z-index: 200;
+      pointer-events: none;
+      display: none;
+      animation: waveIn 2s ease-out forwards;
+    }
+    @keyframes waveIn {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+      40% { transform: translate(-50%, -50%) scale(1.0); }
+      80% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.0); }
+    }
+
+    /* Start Screen */
+    #start-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 300;
+      background: radial-gradient(ellipse at center, rgba(0, 20, 60, 0.9) 0%, rgba(0, 0, 0, 0.95) 70%);
+    }
+    #start-screen h1 {
+      font-size: clamp(28px, 7vw, 64px);
+      color: #00ffff;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.3);
+      letter-spacing: 4px;
+      margin-bottom: 10px;
+    }
+    #start-screen .subtitle {
+      font-size: clamp(12px, 2.5vw, 20px);
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 40px;
+    }
+    #start-screen .instructions {
+      font-size: clamp(11px, 2vw, 16px);
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 30px;
+      text-align: center;
+      line-height: 1.8;
+    }
+    .btn {
+      padding: 14px 48px;
+      font-size: clamp(16px, 3vw, 22px);
+      font-weight: bold;
+      letter-spacing: 3px;
+      border: 2px solid #00ffff;
+      background: rgba(0, 255, 255, 0.1);
+      color: #00ffff;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+    .btn:hover, .btn:active {
+      background: rgba(0, 255, 255, 0.25);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+    }
+
+    /* Game Over Screen */
+    #game-over {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 300;
+      background: radial-gradient(ellipse at center, rgba(60, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.92) 70%);
+    }
+    #game-over h1 {
+      font-size: clamp(32px, 8vw, 72px);
+      color: #ff3333;
+      text-shadow: 0 0 20px rgba(255, 50, 50, 0.6);
+      letter-spacing: 4px;
+      margin-bottom: 15px;
+    }
+    #final-score {
+      font-size: clamp(18px, 4vw, 32px);
+      color: #00ffff;
+      margin-bottom: 8px;
+    }
+    #final-wave {
+      font-size: clamp(14px, 3vw, 24px);
+      color: #ffaa00;
+      margin-bottom: 40px;
+    }
+  </style>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div id="hud-top">
+      <div id="score">SCORE: 0</div>
+      <div id="wave">WAVE 1</div>
+    </div>
+    <div id="health-bar">
+      <div id="health-fill"></div>
+    </div>
+  </div>
+
+  <!-- Wave Announcement -->
+  <div id="wave-announce"></div>
+
+  <!-- Start Screen -->
+  <div id="start-screen">
+    <h1>COSMIC DEFENSE</h1>
+    <p class="subtitle">A Space Shooting VR Experience</p>
+    <div class="instructions">
+      Look at enemies to target them<br>
+      Hold your gaze to charge and fire<br>
+      Survive as many waves as you can
+    </div>
+    <button class="btn" id="start-btn">START</button>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div id="game-over">
+    <h1>GAME OVER</h1>
+    <p id="final-score">Score: 0</p>
+    <p id="final-wave">Wave: 1</p>
+    <button class="btn" id="restart-btn">PLAY AGAIN</button>
+  </div>
+
+  <script type="module" src="game.js"></script>
+</body>
+</html>
