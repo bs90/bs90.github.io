@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYOUSEI-0727-NK-FAM · Lịch trình khảo sát Nhật Bản</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&text=%E4%BB%8F%E5%80%89%E5%8F%A3%E5%A0%80%E5%A4%A7%E5%AE%AE%E6%98%8E%E6%B2%B3%E6%B2%BB%E6%B9%96%E7%A5%9E%E9%81%93%E9%8E%8C%E9%A0%93&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --washi:#F4EFE4;
+    --washi-2:#EFE8D8;
+    --card:#FBF8F1;
+    --sumi:#211E19;
+    --sumi-soft:#4A453C;
+    --muted:#857C6C;
+    --ai:#1E3A52;          /* indigo */
+    --ai-deep:#152838;
+    --shu:#C0392B;         /* vermilion / torii red */
+    --shu-deep:#9E2C20;
+    --brass:#A9853F;
+    --line:#DBD2BF;
+    --display:"Lora","Noto Sans JP","Times New Roman",serif;
+    --body:"Be Vietnam Pro","Noto Sans JP","Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--washi);
+    color:var(--sumi);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 22px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    overflow:hidden;
+    background:var(--ai-deep);
+    color:#F4EFE4;
+  }
+  .hero__img{
+    position:absolute;inset:0;
+    background-size:cover;background-position:center 38%;
+    opacity:.46;
+    filter:saturate(1.05);
+  }
+  .hero__veil{
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(21,40,56,.30) 0%, rgba(21,40,56,.55) 55%, rgba(21,40,56,.92) 100%);
+  }
+  .hero__inner{position:relative;padding:74px 0 52px;}
+  .stamp{
+    display:inline-flex;align-items:center;justify-content:center;
+    border:2px solid var(--shu);
+    color:#F4EFE4;
+    font-family:var(--display);font-weight:700;
+    letter-spacing:.18em;
+    padding:7px 16px;border-radius:4px;
+    font-size:.72rem;
+    background:rgba(192,57,43,.18);
+    text-transform:uppercase;
+  }
+  .hero h1{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(2.3rem,6vw,3.9rem);
+    line-height:1.05;
+    margin:.5em 0 .15em;
+    letter-spacing:.01em;
+  }
+  .hero .sub{
+    font-size:clamp(1rem,2.4vw,1.22rem);
+    color:#E6DDC9;
+    max-width:34ch;
+    margin:0 0 26px;
+  }
+  .hero .code{
+    font-family:var(--display);
+    letter-spacing:.28em;
+    color:var(--brass);
+    font-size:.82rem;
+    font-weight:600;
+  }
+  .facts{
+    display:flex;flex-wrap:wrap;gap:0;
+    border-top:1px solid rgba(244,239,228,.22);
+    margin-top:8px;
+  }
+  .fact{
+    flex:1 1 140px;
+    padding:18px 18px 16px 0;
+    border-right:1px solid rgba(244,239,228,.16);
+  }
+  .fact:last-child{border-right:none;}
+  .fact .n{font-family:var(--display);font-size:1.5rem;font-weight:700;color:#fff;line-height:1;}
+  .fact .l{display:block;margin-top:6px;font-size:.74rem;letter-spacing:.08em;color:#C9BFA9;text-transform:uppercase;}
+
+  /* ---------- ROUTE OVERVIEW ---------- */
+  .route{
+    background:var(--washi-2);
+    border-bottom:1px solid var(--line);
+    padding:26px 0;
+  }
+  .route__line{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(.95rem,2.4vw,1.3rem);
+    color:var(--ai);
+    display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;
+  }
+  .route__line .arr{color:var(--shu);font-weight:700;}
+  .route__note{margin-top:10px;font-size:.86rem;color:var(--muted);}
+
+  /* ---------- DAY ---------- */
+  .day{padding:46px 0 8px;border-bottom:1px solid var(--line);}
+  .day__head{display:flex;align-items:flex-start;gap:18px;margin-bottom:20px;}
+  .dnum{
+    flex:none;
+    width:64px;height:64px;
+    background:var(--shu);
+    color:#FBF8F1;
+    border-radius:8px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    box-shadow:0 6px 18px rgba(192,57,43,.28);
+  }
+  .dnum small{font-size:.58rem;letter-spacing:.18em;opacity:.85;text-transform:uppercase;}
+  .dnum b{font-family:var(--display);font-size:1.7rem;line-height:1;font-weight:700;}
+  .day__title{flex:1;}
+  .day__date{font-size:.78rem;letter-spacing:.14em;color:var(--brass);text-transform:uppercase;font-weight:700;}
+  .day__route{
+    font-family:var(--display);
+    font-size:clamp(1.25rem,3.6vw,1.75rem);
+    font-weight:700;color:var(--ai-deep);
+    line-height:1.18;margin-top:3px;
+  }
+  .day__route .arr{color:var(--shu);}
+
+  .photo{
+    width:100%;border-radius:10px;overflow:hidden;
+    margin:4px 0 24px;
+    background:var(--washi-2);
+    aspect-ratio:16/7.5;
+    position:relative;
+    border:1px solid var(--line);
+  }
+  .photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo figcaption{
+    position:absolute;left:0;bottom:0;
+    background:linear-gradient(0deg,rgba(21,40,56,.82),rgba(21,40,56,0));
+    color:#F4EFE4;font-size:.74rem;letter-spacing:.04em;
+    padding:26px 14px 9px;width:100%;
+  }
+
+  .grid{display:grid;grid-template-columns:1fr 270px;gap:34px;}
+
+  /* timeline */
+  .tl{list-style:none;margin:0;padding:0;position:relative;}
+  .tl:before{
+    content:"";position:absolute;left:6px;top:8px;bottom:8px;
+    width:2px;background:var(--line);
+  }
+  .tl li{position:relative;padding:0 0 16px 28px;}
+  .tl li:before{
+    content:"";position:absolute;left:0;top:7px;
+    width:14px;height:14px;border-radius:50%;
+    background:var(--card);border:2px solid var(--ai);
+  }
+  .tl li.insp:before{border-color:var(--shu);background:var(--shu);}
+  .tl li.move:before{border-color:var(--brass);background:var(--washi);}
+  .tl .it{font-weight:500;color:var(--sumi);}
+  .tl .it .orig{color:var(--ai);font-weight:700;}
+  .tl .meta{display:block;font-size:.8rem;color:var(--muted);margin-top:1px;}
+  .chip{
+    display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;padding:2px 7px;border-radius:3px;
+    background:rgba(192,57,43,.12);color:var(--shu-deep);
+    margin-right:7px;vertical-align:1px;
+  }
+  .chip.mv{background:rgba(169,133,63,.16);color:var(--brass);}
+
+  /* info card */
+  .info{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 18px 20px;
+    align-self:start;
+    position:sticky;top:18px;
+  }
+  .info h4{
+    margin:0 0 12px;font-family:var(--display);font-size:1.02rem;
+    color:var(--ai-deep);letter-spacing:.04em;
+    padding-bottom:9px;border-bottom:1px solid var(--line);
+  }
+  .meal{display:flex;gap:10px;margin-bottom:11px;align-items:flex-start;}
+  .meal .tag{
+    flex:none;width:26px;height:26px;border-radius:6px;
+    background:var(--ai);color:#fff;font-weight:700;font-size:.78rem;
+    display:flex;align-items:center;justify-content:center;font-family:var(--display);
+  }
+  .meal .tag.d{background:var(--shu);}
+  .meal .tag.x{background:var(--muted);}
+  .meal p{margin:0;font-size:.83rem;line-height:1.45;color:var(--sumi-soft);}
+  .meal p b{color:var(--sumi);font-weight:700;display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .hotel{
+    margin-top:14px;padding-top:14px;border-top:1px solid var(--line);
+    font-size:.84rem;
+  }
+  .hotel .lbl{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px;}
+  .hotel .name{font-family:var(--display);font-weight:700;color:var(--ai-deep);font-size:1rem;}
+  .stars{color:var(--brass);letter-spacing:.1em;font-size:.8rem;}
+
+  /* ---------- NOTES / SERVICES ---------- */
+  .pad{padding:42px 0;}
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:24px 24px 22px;margin-bottom:20px;
+  }
+  .panel h3{font-family:var(--display);color:var(--ai-deep);margin:0 0 14px;font-size:1.2rem;}
+  .panel.warn{border-left:4px solid var(--shu);}
+  .panel.warn h3{color:var(--shu-deep);}
+  .svc{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 22px;}
+  .svc li{position:relative;padding-left:20px;font-size:.92rem;color:var(--sumi-soft);}
+  .svc li:before{content:"";position:absolute;left:0;top:9px;width:8px;height:8px;background:var(--brass);border-radius:2px;transform:rotate(45deg);}
+  .warn ul{margin:0;padding-left:20px;}
+  .warn li{margin-bottom:9px;font-size:.92rem;color:var(--sumi-soft);}
+  .warn li b{color:var(--shu-deep);}
+
+  footer{background:var(--ai-deep);color:#C9BFA9;font-size:.8rem;padding:26px 0;}
+  footer b{color:#F4EFE4;font-family:var(--display);letter-spacing:.1em;}
+
+  @media (max-width:720px){
+    .grid{grid-template-columns:1fr;gap:24px;}
+    .info{position:static;}
+    .photo{aspect-ratio:16/10;}
+    .fact{flex:1 1 45%;border-right:none;padding-right:0;}
+  }
+  @media print{
+    .hero__img,.hero__veil{opacity:1;}
+    .info{position:static;}
+    .day{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero__img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Fuji_from_Lake_Kawaguchi.jpg?width=1600')"></div>
+  <div class="hero__veil"></div>
+  <div class="wrap hero__inner">
+    <span class="stamp">FAM Trip · Chương trình khảo sát</span>
+    <h1>Golden Route<br>Nhật Bản</h1>
+    <p class="sub">Hành trình 5 ngày 4 đêm: Tokyo · Kamakura · Hokuto · Phú Sĩ · Nagoya · Kyoto · Osaka</p>
+    <div class="code">SYOUSEI&nbsp;Co.,&nbsp;Ltd. — SYOUSEI-0727-NK-FAM</div>
+    <div class="facts">
+      <div class="fact"><span class="n">27–31/7</span><span class="l">Thứ 2 → Thứ 6</span></div>
+      <div class="fact"><span class="n">5N4Đ</span><span class="l">5 ngày 4 đêm</span></div>
+      <div class="fact"><span class="n">4★</span><span class="l">Khách sạn &amp; ryokan</span></div>
+      <div class="fact"><span class="n">HAN/SGN</span><span class="l">Khứ hồi VN</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ROUTE -->
+<section class="route">
+  <div class="wrap">
+    <div class="route__line">
+      Tokyo <span class="arr">→</span> Kamakura <span class="arr">→</span> Hokuto <span class="arr">→</span> Fujiyoshida <span class="arr">→</span> Toyohashi <span class="arr">→</span> Nagoya <span class="arr">→</span> Kyoto <span class="arr">→</span> Osaka <span class="arr">→</span> Kansai
+    </div>
+    <p class="route__note">Tuyến phủ trọn Golden Route mở rộng. Các điểm <strong style="color:var(--shu)">KHẢO SÁT</strong> là mục inspect khách sạn / điểm tham quan để xây dựng sản phẩm tour.</p>
+  </div>
+</section>
+
+<!-- DAY 1 -->
+<section class="day" id="d1">
+  <div class="wrap">
+    <div class="day__head">
+      <div class="dnum"><small>Ngày</small><b>1</b></div>
+      <div class="day__title">
+        <div class="day__date">27/07 · Thứ Hai</div>
+        <div class="day__route">Đến Tokyo <span class="arr">·</span> Meiji &amp; Shibuya</div>
+      </div>
+    </div>
+
+    <figure class="photo">
+      <img alt="Cổng torii đền Meiji, Tokyo" loading="lazy"
+           src="https://commons.wikimedia.org/wiki/Special:FilePath/Meiji-jingu_torii.JPG?width=1200">
+      <figcaption>Đền Meiji Jingu (明治神宮) — Shibuya, Tokyo</figcaption>
+    </figure>
+
+    <div class="grid">
+      <ul class="tl">
+        <li class="move"><span class="chip mv">Di chuyển</span><span class="it">Đón đoàn tại sân bay <span class="orig">NRT (Narita)</span>, đưa về Nikko Narita Hotel</span></li>
+        <li class="insp"><span class="chip">Khảo sát</span><span class="it"><span class="orig">Nikko Narita Hotel</span> · <span class="orig">New Otani Makuhari</span> · <span class="orig">Mitsui Outlet Park Makuhari</span></span></li>
+        <li><span class="it">Ăn trưa tại nhà hàng địa phương</span></li>
+        <li><span class="it"><span class="orig">Meiji Jingu Shrine</span> — đền thờ Thiên hoàng Minh Trị</span></li>
+        <li><span class="it"><span class="orig">Shibuya – Ginza – Bic Camera</span> (mua sắm)</span></li>
+        <li class="insp"><span class="chip">Khảo sát</span><span class="it"><span class="orig">Daiichi Ryogoku Hotel</span> &amp; nhận phòng</span></li>
+        <li><span class="it">Ăn tối tại khách sạn &amp; tự do</span></li>
+      </ul>
+
+      <aside class="info">
+        <h4>Ăn &amp; nghỉ</h4>
+        <div class="meal"><div class="tag">B</div><p><b>Sáng</b>Trên máy bay</p></div>
+        <div class="meal"><div class="tag">L</div><p><b>Trưa</b>BBQ + drink bar</p></div>
+        <div class="meal"><div class="tag d">D</div><p><b>Tối</b>Beef steak + saba yaki — phòng/khu riêng tại KS</p></div>
+        <div class="hotel">
+          <span class="lbl">Lưu trú</span>
+          <span class="name">Daiichi Ryogoku Hotel</span>
+          <span class="stars">★★★★</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- DAY 2 -->
+<section class="day" id="d2">
+  <div class="wrap">
+    <div class="day__head">
+      <div class="dnum"><small>Ngày</small><b>2</b></div>
+      <div class="day__title">
+        <div class="day__date">28/07 · Thứ Ba</div>
+        <div class="day__route">Tokyo <span class="arr">→</span> Kamakura <span class="arr">→</span> Hokuto</div>
+      </div>
+    </div>
+
+    <figure class="photo">
+      <img alt="Đại Phật Kamakura" loading="lazy"
+           src="https://commons.wikimedia.org/wiki/Special:FilePath/The_Great_Buddha_of_Kamakura_(Daibutsu).jpg?width=1200">
+      <figcaption>Đại Phật Kamakura (鎌倉大仏) — chùa Kōtoku-in</figcaption>
+    </figure>
+
+    <div class="grid">
+      <ul class="tl">
+        <li><span class="it">Ăn sáng &amp; trả phòng</span></li>
+        <li class="insp"><span class="chip">Khảo sát</span><span class="it"><span class="orig">Villa Fontaine Grand Haneda</span> · <span class="orig">Yokohama Prince</span></span></li>
+        <li class="move"><span class="chip mv">Di chuyển</span><span class="it">Đi <span class="orig">Kamakura</span></span></li>
+        <li><span class="it"><span class="orig">Kamakura Buddha</span> — Đại Phật Kamakura</span></li>
+        <li><span class="it">Ăn trưa tại nhà hàng địa phương</span></li>
+        <li class="move"><span class="chip mv">Di chuyển</span><span class="it">Đi <span class="orig">Hokuto</span> <span class="meta">174 km · ~3 giờ</span></span></li>
+        <li class="insp"><span class="chip">Khảo sát</span><span class="it"><span class="orig">Sun Meadow Kiyosato Terrace</span> · <span class="orig">Moegi Old Village</span></span></li>
+        <li class="move"><span class="chip mv">Di chuyển</span><span class="it">Về ryokan, nhận phòng</span></li>
+        <li class="insp"><span class="chip">Đặc sắc</span><span class="it">Tiệc tối đặc biệt cùng thành phố Hokuto</span></li>
+        <li><span class="it">Tắm onsen — thư giãn</span></li>
+      </ul>
+
+      <aside class="info">
+        <h4>Ăn &amp; nghỉ</h4>
+        <div class="meal"><div class="tag">B</div><p><b>Sáng</b>Tại khách sạn</p></div>
+        <div class="meal"><div class="tag">L</div><p><b>Trưa</b>Fujizakura + show trống + khảo sát phòng</p></div>
+        <div class="meal"><div class="tag d">D</div><p><b>Tối</b>Kaiseki — phòng riêng tại ryokan</p></div>
+        <div class="hotel">
+          <span class="lbl">Lưu trú</span>
+          <span class="name">Wakamiro Ryokan</span>
+          <span class="stars">Onsen ryokan</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- DAY 3 -->
+<section class="day" id="d3">
+  <div class="wrap">
+    <div class="day__head">
+      <div class="dnum"><small>Ngày</small><b>3</b></div>
+      <div class="day__title">
+        <div class="day__date">29/07 · Thứ Tư</div>
+        <div class="day__route">Hokuto <span class="arr">·</span> Yatsugatake <span class="arr">→</span> Phú Sĩ</div>
+      </div>
+    </div>
+
+    <figure class="photo">
+      <img alt="Núi Phú Sĩ nhìn từ hồ Kawaguchi" loading="lazy"
+           src="https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Fuji_from_Lake_Kawaguchi.jpg?width=1200">
+      <figcaption>Núi Phú Sĩ nhìn từ hồ Kawaguchi (河口湖) — Fujiyoshida</figcaption>
+    </figure>
+
+    <div class="grid">
+      <ul class="tl">
+        <li><span class="it">Ăn sáng &amp; trả phòng</span></li>
+        <li class="insp"><span class="chip">Khảo sát</span><span class="it"><span class="orig">Jindai Sakura</span> (anh đào cổ ~2.000 năm) · <span class="orig">Yatsugatake Kogen Line</span> · <span class="orig">Risonare Yatsugatake Hotel</span></span></li>
+        <li><span class="it">Ăn trưa tại nhà hàng địa phương</span></li>
+        <li class="insp"><span class="chip">Khảo sát</span><span class="it"><span class="orig">Honcho Street (Fuji Michi)</span> tại Fujiyoshida — phố ngắm Phú Sĩ</span></li>
+        <li class="insp"><span class="chip">Trải nghiệm</span><span class="it">Trải nghiệm trà matcha tại <span class="orig">Kawaguchiko</span></span></li>
+        <li class="insp"><span class="chip">Khảo sát</span><span class="it"><span class="orig">Fujizakura Hotel</span> &amp; nhận phòng</span></li>
+        <li><span class="it">Ăn tối tại khách sạn</span></li>
+      </ul>
+
+      <aside class="info">
+        <h4>Ăn &amp; nghỉ</h4>
+        <div class="meal"><div class="tag">B</div><p><b>Sáng</b>Tại khách sạn</p></div>
+        <div class="meal"><div class="tag">L</div><p><b>Trưa</b>BBQ bò Tajima tại Hokuto</p></div>
+        <div class="meal"><div class="tag d">D</div><p><b>Tối</b>Buffet tại khách sạn</p></div>
+        <div class="hotel">
+          <span class="lbl">Lưu trú · cần xác nhận</span>
+          <span class="name">Fujizakura Hotel?</span>
+          <span class="meta" style="color:var(--shu-deep);font-size:.78rem;display:block;margin-top:4px;">Bảng gốc ghi đồng thời "Associa Toyohashi" — xem ghi chú cuối trang.</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- DAY 4 -->
+<section class="day" id="d4">
+  <div class="wrap">
+    <div class="day__head">
+      <div class="dnum"><small>Ngày</small><b>4</b></div>
+      <div class="day__title">
+        <div class="day__date">30/07 · Thứ Năm</div>
+        <div class="day__route">Toyohashi <span class="arr">→</span> Nagoya <span class="arr">→</span> Kyoto <span class="arr">→</span> Osaka</div>
+      </div>
+    </div>
+
+    <figure class="photo">
+      <img alt="Núi Phú Sĩ nhìn từ tàu Shinkansen" loading="lazy"
+           src="https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Fuji_from_the_bullet_train_20071118_1106_(2636781504).jpg?width=1200">
+      <figcaption>Trải nghiệm Shinkansen — ngắm Phú Sĩ từ tàu cao tốc</figcaption>
+    </figure>
+
+    <div class="grid">
+      <ul class="tl">
+        <li><span class="it">Ăn sáng &amp; trả phòng</span></li>
+        <li class="insp"><span class="chip">Trải nghiệm</span><span class="it">Trải nghiệm <span class="orig">Shinkansen</span> <span class="meta">đã bao gồm ¥1.500</span></span></li>
+        <li class="move"><span class="chip mv">Di chuyển</span><span class="it">Đi <span class="orig">Nagoya</span> <span class="meta">bảng ghi 260 km/4h — xem ghi chú</span></span></li>
+        <li class="insp"><span class="chip">Khảo sát</span><span class="it"><span class="orig">Mitsui Outlet Jazz Dream</span> · ăn trưa bên trong</span></li>
+        <li class="move"><span class="chip mv">Di chuyển</span><span class="it">Đi <span class="orig">Kyoto</span></span></li>
+        <li><span class="it"><span class="orig">Heian Jingu</span> — đền Heian <span class="meta">đã bao gồm ¥600</span></span></li>
+        <li class="move"><span class="chip mv">Di chuyển</span><span class="it">Đi <span class="orig">Osaka</span> <span class="meta">160 km · ~3 giờ</span></span></li>
+        <li class="insp"><span class="chip">Khảo sát</span><span class="it"><span class="orig">Agora Regency Sakai Hotel</span> &amp; nhận phòng</span></li>
+        <li class="insp"><span class="chip">Đặc sắc</span><span class="it">Geisha show tại Osaka (17:00) · Wagyu shabu-shabu</span></li>
+        <li><span class="it">Xe thả tại <span class="orig">Namba City</span>, đoàn tự về khách sạn</span></li>
+      </ul>
+
+      <aside class="info">
+        <h4>Ăn &amp; nghỉ</h4>
+        <div class="meal"><div class="tag">B</div><p><b>Sáng</b>Tại khách sạn</p></div>
+        <div class="meal"><div class="tag">L</div><p><b>Trưa</b>Hanshin Kyoto</p></div>
+        <div class="meal"><div class="tag d">D</div><p><b>Tối</b>Shabu-shabu buffet Nabekan — kèm karaoke</p></div>
+        <div class="hotel">
+          <span class="lbl">Lưu trú</span>
+          <span class="name">Agora Regency Sakai Hotel</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- DAY 5 -->
+<section class="day" id="d5">
+  <div class="wrap">
+    <div class="day__head">
+      <div class="dnum"><small>Ngày</small><b>5</b></div>
+      <div class="day__title">
+        <div class="day__date">31/07 · Thứ Sáu</div>
+        <div class="day__route">Osaka <span class="arr">→</span> Kansai <span class="arr">→</span> HAN/SGN</div>
+      </div>
+    </div>
+
+    <figure class="photo">
+      <img alt="Dotonbori Osaka về đêm" loading="lazy"
+           src="https://commons.wikimedia.org/wiki/Special:FilePath/Dotonbori%2C_Osaka%2C_at_night%2C_November_2016.jpg?width=1200">
+      <figcaption>Dotonbori (道頓堀), Osaka — đêm cuối trước khi rời Nhật</figcaption>
+    </figure>
+
+    <div class="grid">
+      <ul class="tl">
+        <li class="move"><span class="chip mv">Lưu ý</span><span class="it">Ngày này <span class="orig">chỉ có dịch vụ xe</span> (bus transfer only)</span></li>
+        <li><span class="it">Ăn sáng &amp; trả phòng</span></li>
+        <li class="move"><span class="chip mv">06:30</span><span class="it">Đi sân bay <span class="orig">Kansai (KIX)</span> — đáp chuyến bay về Việt Nam</span></li>
+      </ul>
+
+      <aside class="info">
+        <h4>Ăn &amp; nghỉ</h4>
+        <div class="meal"><div class="tag">B</div><p><b>Sáng</b>Tại khách sạn</p></div>
+        <div class="meal"><div class="tag x">L</div><p><b>Trưa</b>Không có (bay sáng)</p></div>
+        <div class="hotel">
+          <span class="lbl">Kết thúc</span>
+          <span class="name">Bay về HAN / SGN</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- NOTES + SERVICES -->
+<section class="pad">
+  <div class="wrap">
+    <div class="panel">
+      <h3>Dịch vụ bao gồm</h3>
+      <ul class="svc">
+        <li>Xe bus 45 chỗ</li>
+        <li>Khách sạn 2–3 khách / phòng</li>
+        <li>Toàn bộ các bữa ăn theo chương trình</li>
+        <li>Vé tham quan</li>
+        <li>1 chai nước / khách / ngày</li>
+      </ul>
+    </div>
+
+    <div class="panel warn">
+      <h3>Điểm cần xác nhận trước khi chốt</h3>
+      <ul>
+        <li><b>Đêm 29/7:</b> dòng lịch ghi nhận phòng <i>Fujizakura Hotel</i> (Kawaguchiko, Yamanashi) nhưng cột khách sạn ghi <i>Associa Toyohashi</i> (Aichi) — cách nhau ~150 km. Sáng 30/7 lại bắt đầu từ Toyohashi. Cần chốt đoàn thực sự ngủ ở đâu.</li>
+        <li><b>Quãng đường 30/7:</b> "Toyohashi → Nagoya 260 km/4h" không khớp thực tế (Toyohashi–Nagoya chỉ ~70 km/1h). Con số 260 km gần với chặng Toyohashi → Osaka hơn.</li>
+        <li><b>Lệch mùa:</b> tour đi cuối tháng 7 nhưng có các điểm gắn với hoa anh đào (<i>Jindai Sakura</i>, <i>Fujizakura</i>) — tháng 7 chỉ thấy cây, không có hoa. Phù hợp cho mục đích khảo sát, nên ghi chú rõ cho nhân viên.</li>
+        <li><b>Tiêu đề ngày 29/7</b> ghi "Shizuoka" nhưng hành trình không chạm Shizuoka (điểm cuối là Aichi).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b>SYOUSEI Co., Ltd. Japan</b> · SYOUSEI-0727-NK-FAM<br>
+    Ảnh minh hoạ từ Wikimedia Commons (giấy phép CC / public domain). Lịch trình tóm tắt từ bảng chương trình gốc — vui lòng đối chiếu bản chính thức trước khi phát hành.
+  </div>
+</footer>
+
+<script>
+  // Ẩn nhẹ ảnh lỗi để không vỡ layout
+  document.querySelectorAll('.photo img').forEach(function(img){
+    img.addEventListener('error', function(){
+      this.style.display='none';
+      this.parentElement.style.background='linear-gradient(135deg,var(--washi-2),var(--line))';
+    });
+  });
+</script>
+</body>
+</html>
