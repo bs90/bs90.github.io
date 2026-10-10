@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>おんぷクイズ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF3F8; --paper:#FFFFFF; --ink:#1E2A44; --soft:#5B6B86; --line:#9DB0C9; --rule:#D5DFEB;
+  --good:#1F9D55; --bad:#D64545; --chip:#E1E9F3;
+  --n0:#E5484D; --n1:#EE8530; --n2:#D9A800; --n3:#2E9E57; --n4:#2B90D9; --n5:#4C5FD5; --n6:#9149D8;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121A2A; --paper:#1B263B; --ink:#EAF0FA; --soft:#A3B2CB; --line:#6E82A3; --rule:#2B3A55;
+    --good:#45C47A; --bad:#FF6B6B; --chip:#25334D; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121A2A; --paper:#1B263B; --ink:#EAF0FA; --soft:#A3B2CB; --line:#6E82A3; --rule:#2B3A55;
+  --good:#45C47A; --bad:#FF6B6B; --chip:#25334D; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);
+  font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
+  -webkit-tap-highlight-color:transparent}
+main{max-width:560px;margin:0 auto;padding:18px 16px 28px}
+h1{font-size:30px;font-weight:900;margin:6px 0 2px;letter-spacing:.02em}
+.sub{color:var(--soft);margin:0 0 16px;font-size:15px}
+.screen[hidden]{display:none}
+
+.staff-wrap{background:var(--paper);border-radius:22px;padding:8px 6px;position:relative;
+  box-shadow:0 1px 0 var(--rule), inset 0 0 0 2px var(--rule)}
+.staff-wrap svg{display:block;width:100%;height:auto}
+.staff-line{stroke:var(--line);stroke-width:1.6}
+.clef{fill:var(--ink)}
+.note{fill:var(--ink);transition:fill .2s}
+.hint-line{stroke-width:4;opacity:.9}
+
+.group{margin:18px 0 0}
+.group-title{font-weight:700;font-size:15px;color:var(--soft);margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:16px;font-weight:700;color:var(--ink);background:var(--chip);
+  border:2px solid transparent;border-radius:999px;padding:10px 16px;cursor:pointer;min-height:46px}
+.chip small{font-weight:500;color:var(--soft);font-size:12px;margin-left:4px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.chip[aria-pressed="true"] small{color:var(--paper);opacity:.75}
+.big{display:block;width:100%;margin-top:24px;font:inherit;font-size:22px;font-weight:900;
+  background:var(--n4);color:#fff;border:0;border-radius:18px;padding:16px;cursor:pointer;
+  box-shadow:0 5px 0 color-mix(in srgb,var(--n4) 60%,#000)}
+.big:active{transform:translateY(3px);box-shadow:0 2px 0 color-mix(in srgb,var(--n4) 60%,#000)}
+button:focus-visible{outline:3px solid var(--n2);outline-offset:3px}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.progress{flex:1;height:12px;background:var(--chip);border-radius:99px;overflow:hidden}
+.progress span{display:block;height:100%;width:0;background:var(--n3);border-radius:99px;transition:width .3s}
+.count{font-weight:700;font-size:15px;color:var(--soft);min-width:58px;text-align:right}
+.icon-btn{font:inherit;font-size:14px;font-weight:700;background:var(--chip);color:var(--ink);border:0;
+  border-radius:12px;padding:8px 12px;cursor:pointer;min-height:40px}
+.clef-name{position:absolute;left:16px;top:10px;font-size:14px;font-weight:700;color:var(--soft)}
+.streak{position:absolute;right:16px;top:10px;font-size:14px;font-weight:700;color:var(--n1)}
+.feedback{height:38px;text-align:center;font-size:24px;font-weight:900;margin:10px 0 4px}
+.feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+
+.keys{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:6px}
+.key{--c:var(--n0);font:inherit;cursor:pointer;border:0;border-radius:16px 16px 12px 12px;
+  background:var(--c);color:#fff;padding:14px 0 10px;min-height:76px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;box-shadow:0 5px 0 color-mix(in srgb,var(--c) 55%,#000);
+  transition:transform .08s, opacity .2s}
+.key:active{transform:translateY(3px);box-shadow:0 2px 0 color-mix(in srgb,var(--c) 55%,#000)}
+.key b{font-size:clamp(17px,5vw,24px);font-weight:900;line-height:1.1;text-shadow:0 1px 1px rgba(0,0,0,.25)}
+.key i{font-style:normal;font-size:12px;font-weight:700;opacity:.9}
+.key[disabled]{cursor:default}
+.keys.locked .key:not(.right):not(.wrong){opacity:.35}
+.key.right{outline:4px solid var(--good);outline-offset:3px}
+.key.wrong{opacity:.7;outline:3px dashed var(--bad);outline-offset:3px;animation:shake .35s}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.row{display:flex;gap:8px;margin-top:16px}
+.row .icon-btn{flex:1;min-height:48px;font-size:16px}
+#next{background:var(--ink);color:var(--paper)}
+#next[hidden]{display:none}
+
+.result-score{text-align:center;margin:10px 0 4px}
+.result-score b{font-size:64px;font-weight:900;line-height:1}
+.result-score span{font-size:22px;color:var(--soft);font-weight:700}
+.stars{text-align:center;font-size:40px;letter-spacing:6px;margin:4px 0}
+.msg{text-align:center;font-size:18px;font-weight:700;margin:6px 0 4px}
+.best{text-align:center;color:var(--soft);font-size:14px;margin:0 0 10px}
+.missed{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px}
+.miss{background:var(--paper);border-radius:16px;padding:4px 4px 8px;text-align:center;box-shadow:inset 0 0 0 2px var(--rule)}
+.miss svg{display:block;width:100%;height:auto}
+.miss div{font-weight:700;font-size:15px}
+.miss small{display:block;color:var(--soft);font-size:12px;font-weight:500}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+
+<section class="screen" id="start">
+  <h1>おんぷクイズ</h1>
+  <p class="sub">五線のおんぷを見て、ドレミのボタンをおしてね。</p>
+  <div class="staff-wrap" id="demo"></div>
+
+  <div class="group">
+    <p class="group-title">きごう</p>
+    <div class="chips" data-set="clef">
+      <button class="chip" data-v="treble">ト音記号</button>
+      <button class="chip" data-v="bass">ヘ音記号</button>
+      <button class="chip" data-v="mix">まぜる</button>
+    </div>
+  </div>
+  <div class="group">
+    <p class="group-title">レベル</p>
+    <div class="chips" data-set="level">
+      <button class="chip" data-v="0">かんたん<small>ド〜ド</small></button>
+      <button class="chip" data-v="1">ふつう<small>五線＋少し</small></button>
+      <button class="chip" data-v="2">むずかしい<small>加線たくさん</small></button>
+    </div>
+  </div>
+  <div class="group">
+    <p class="group-title">いちどに出るおんぷ</p>
+    <div class="chips" data-set="count">
+      <button class="chip" data-v="1">1つ</button>
+      <button class="chip" data-v="3">3つ<small>ならびで読む</small></button>
+    </div>
+  </div>
+  <div class="group">
+    <p class="group-title">もんだいの数</p>
+    <div class="chips" data-set="total">
+      <button class="chip" data-v="10">10もん</button>
+      <button class="chip" data-v="20">20もん</button>
+      <button class="chip" data-v="30">30もん</button>
+    </div>
+  </div>
+  <div class="group">
+    <p class="group-title">音のよびかた</p>
+    <div class="chips" data-set="names">
+      <button class="chip" data-v="doremi">ドレミ</button>
+      <button class="chip" data-v="hani">ハニホ</button>
+      <button class="chip" data-v="abc">CDE</button>
+    </div>
+  </div>
+  <div class="group">
+    <p class="group-title">おと</p>
+    <div class="chips" data-set="sound">
+      <button class="chip" data-v="on">ならす</button>
+      <button class="chip" data-v="off">けす</button>
+    </div>
+  </div>
+  <button class="big" id="go">はじめる</button>
+</section>
+
+<section class="screen" id="quiz" hidden>
+  <div class="bar">
+    <button class="icon-btn" id="quit" aria-label="やめる">やめる</button>
+    <div class="progress" aria-hidden="true"><span id="prog"></span></div>
+    <div class="count" id="count">1 / 10</div>
+  </div>
+  <div class="staff-wrap">
+    <div class="clef-name" id="clefName"></div>
+    <div class="streak" id="streak"></div>
+    <div id="stage"></div>
+  </div>
+  <div class="feedback" id="fb" aria-live="polite"></div>
+  <div class="keys" id="keys"></div>
+  <div class="row">
+    <button class="icon-btn" id="hintBtn">ヒント</button>
+    <button class="icon-btn" id="next" hidden>つぎへ</button>
+  </div>
+</section>
+
+<section class="screen" id="result" hidden>
+  <h1>けっか</h1>
+  <div class="result-score"><b id="rScore">0</b><span id="rTotal"> / 10</span></div>
+  <div class="stars" id="rStars"></div>
+  <p class="msg" id="rMsg"></p>
+  <p class="best" id="rBest"></p>
+  <button class="big" id="again">もういちど</button>
+  <div class="row">
+    <button class="icon-btn" id="practice">まちがいを練習</button>
+    <button class="icon-btn" id="home">せっていにもどる</button>
+  </div>
+  <div class="group" id="missWrap">
+    <p class="group-title">まちがえたおんぷ</p>
+    <div class="missed" id="missed"></div>
+  </div>
+</section>
+
+</main>
+<script>
+(function(){
+const TREBLE_PATH = "M314 801Q300 854 291.0 906.0Q282 958 282 1012Q282 1059 288.5 1100.5Q295 1142 307 1177Q320 1217 341.0 1252.5Q362 1288 385.5 1311.0Q409 1334 427 1334Q451 1334 493 1249Q514 1206 524.0 1156.0Q534 1106 534 1049Q534 978 515.0 907.5Q496 837 459.5 775.0Q423 713 372 666L407 498Q422 500 432.0 501.0Q442 502 447 502Q508 502 556.0 467.5Q604 433 632.5 377.0Q661 321 661 254Q661 177 621.5 115.5Q582 54 503 25Q508 8 532 -117Q538 -147 541.0 -164.5Q544 -182 545.0 -195.0Q546 -208 546 -225Q546 -275 521.5 -314.5Q497 -354 455.5 -376.0Q414 -398 363 -398Q311 -398 271.0 -378.5Q231 -359 208.0 -324.5Q185 -290 185 -245Q185 -197 211.5 -165.0Q238 -133 287 -133Q329 -133 355.5 -163.5Q382 -194 382 -236Q382 -272 357.0 -299.0Q332 -326 292 -326H282Q308 -365 364 -365Q433 -365 472.0 -320.0Q511 -275 511 -205Q511 -188 507.0 -159.5Q503 -131 493 -91Q483 -51 477.5 -25.0Q472 1 470 12Q436 2 390 2Q304 2 222 52Q142 102 96.0 184.0Q50 266 50 361Q50 451 91 530Q132 609 192.5 675.0Q253 741 314 801ZM341 826Q364 838 390.0 870.5Q416 903 440.0 945.0Q464 987 479.0 1029.5Q494 1072 494 1106Q494 1142 483.0 1163.0Q472 1184 445 1184Q421 1184 398.5 1162.0Q376 1140 358.5 1103.5Q341 1067 331.0 1022.0Q321 977 321 930Q321 898 327.5 872.0Q334 846 341 826ZM398 379Q371 373 347.0 353.5Q323 334 308.5 306.5Q294 279 294 248Q294 223 307.0 196.5Q320 170 339 154Q352 142 365 136Q380 129 380 123Q380 120 370 117Q332 126 301.5 151.0Q271 176 253.5 211.5Q236 247 236 287Q236 330 253.5 370.0Q271 410 302.5 442.0Q334 474 374 490L345 641Q229 547 174.5 456.5Q120 366 120 277Q120 212 154.0 156.0Q188 100 247.0 65.5Q306 31 380 31Q400 31 420.5 35.0Q441 39 464 45ZM495 55Q593 97 593 227Q593 270 571.0 305.5Q549 341 512.0 362.0Q475 383 429 383Z";
+const BASS_PATH = "M50 123Q216 231 288 301Q336 348 373.0 408.5Q410 469 431.5 536.0Q453 603 453 669Q453 728 435.0 773.5Q417 819 383.0 845.0Q349 871 302 871Q284 871 264.5 867.0Q245 863 224 855Q181 839 158.0 813.5Q135 788 135 765Q135 756 143.0 752.0Q151 748 158 748Q168 748 183 752Q190 754 196.5 755.0Q203 756 210 756Q248 756 272.0 733.5Q296 711 296 674Q296 638 266.0 612.0Q236 586 195 586Q146 586 111.0 617.0Q76 648 76 697Q76 756 109.0 802.0Q142 848 198.5 874.0Q255 900 324 900Q400 900 460.0 867.0Q520 834 555.5 776.5Q591 719 591 646Q591 551 538 464Q511 419 476.5 379.0Q442 339 389.0 297.5Q336 256 256.0 208.0Q176 160 57 101ZM687 809Q710 809 726.0 793.0Q742 777 742 754Q742 731 726.0 715.5Q710 700 687 700Q664 700 648.0 715.5Q632 731 632 754Q632 777 648.0 793.0Q664 809 687 809ZM687 589Q710 589 726.0 573.0Q742 557 742 534Q742 511 726.0 495.5Q710 480 687 480Q664 480 648.0 495.5Q632 511 632 534Q632 557 648.0 573.0Q664 589 687 589Z";
+
+const NAMES = {
+  doremi:["ド","レ","ミ","ファ","ソ","ラ","シ"],
+  hani:["ハ","ニ","ホ","ヘ","ト","イ","ロ"],
+  abc:["C","D","E","F","G","A","B"]
+};
+const SUBS = {doremi:"abc", hani:"doremi", abc:"doremi"};
+const SEMI=[0,2,4,5,7,9,11];
+// d = octave*7 + letter (C=0). Bottom staff line: treble E4=30, bass G2=18
+const BASE={treble:30, bass:18};
+const RANGE={
+  treble:[[28,35],[28,40],[26,42]],
+  bass:[[21,28],[16,28],[14,30]]
+};
+const CLEF_JA={treble:"ト音記号", bass:"ヘ音記号"};
+
+const S = {clef:"treble", level:"0", count:"3", total:"10", names:"doremi", sound:"on"};
+try{ const saved=JSON.parse(localStorage.getItem("onpu-settings")||"null"); if(saved) Object.assign(S,saved);}catch(e){}
+
+const $=id=>document.getElementById(id);
+const svgNS="http://www.w3.org/2000/svg";
+
+// ---------- staff drawing ----------
+const G=20, TOP=62, BOT=TOP+4*G, H=228, NX=196;
+function yOf(s){ return BOT - s*(G/2); }
+// notes: [{s, color, label, wrong}]
+function staffSVG(opts){
+  const {clef, notes=[], cur=-1, hint=false, mini=false} = opts;
+  const n=notes.length, w = opts.w || (n>1?330:300);
+  const xs = mini ? [w*0.68] : n===1 ? [NX] : notes.map((_,i)=>w*(0.43+0.21*i));
+  const parts=[];
+  if(cur>=0 && n>1){
+    parts.push(`<rect x="${xs[cur]-27}" y="6" width="54" height="${H-12}" rx="16" fill="var(--chip)"/>`);
+    parts.push(`<path d="M${xs[cur]-7} 12 L${xs[cur]+7} 12 L${xs[cur]} 20 Z" fill="var(--n4)"/>`);
+  }
+  for(let i=0;i<5;i++){ const y=TOP+i*G; parts.push(`<line class="staff-line" x1="8" x2="${w-8}" y1="${y}" y2="${y}"/>`); }
+  if(hint){
+    const hs = clef==="treble"?2:6, hc = clef==="treble"?4:3, y=yOf(hs);
+    parts.push(`<line class="hint-line" x1="8" x2="${w-8}" y1="${y}" y2="${y}" stroke="var(--n${hc})"/>`);
+    parts.push(`<text x="${clef==="treble"?78:94}" y="${y-6}" font-size="15" style="paint-order:stroke;stroke:var(--paper);stroke-width:4px" font-weight="900" fill="var(--n${hc})">ここが ${NAMES[S.names][hc]}</text>`);
+  }
+  const k=G/250;
+  if(clef==="treble") parts.push(`<path class="clef" transform="translate(18 ${BOT}) scale(${k} ${-k})" d="${TREBLE_PATH}"/>`);
+  else parts.push(`<path class="clef" transform="translate(22 ${BOT}) scale(${k} ${-k}) translate(0 125)" d="${BASS_PATH}"/>`);
+  notes.forEach((nt,i)=>{
+    const x=xs[i], s=nt.s, y=yOf(s), color=nt.color;
+    for(let t2=-2;t2>=s;t2-=2) parts.push(`<line class="staff-line" stroke-width="2" x1="${x-19}" x2="${x+19}" y1="${yOf(t2)}" y2="${yOf(t2)}"/>`);
+    for(let t2=10;t2<=s;t2+=2) parts.push(`<line class="staff-line" stroke-width="2" x1="${x-19}" x2="${x+19}" y1="${yOf(t2)}" y2="${yOf(t2)}"/>`);
+    const fill = color?`style="fill:${color}"`:"";
+    parts.push(`<g transform="translate(${x} ${y})"><ellipse class="note" ${fill} rx="12.5" ry="9" transform="rotate(-18)"/>`+
+      `<ellipse rx="6.6" ry="4.2" transform="rotate(-62)" fill="${(cur===i&&n>1)?'var(--chip)':'var(--paper)'}"/></g>`);
+    if(nt.label){
+      const lc = nt.wrong ? 'var(--bad)' : (color||'var(--ink)');
+      if(n===1) parts.push(`<text x="${x+34}" y="${y+9}" font-size="26" font-weight="900" style="fill:${lc};paint-order:stroke;stroke:var(--paper);stroke-width:6px">${nt.label}</text>`);
+      else parts.push(`<text x="${x}" y="${H-12}" text-anchor="middle" font-size="24" font-weight="900" style="fill:${lc}">${nt.label}${nt.wrong?'<tspan font-size="14"> ✕</tspan>':''}</text>`);
+    }
+  });
+  return `<svg viewBox="0 0 ${w} ${H}" role="img" aria-label="${CLEF_JA[clef]}の五線">${parts.join("")}</svg>`;
+}
+
+// ---------- sound ----------
+let ac=null;
+function play(d, wrong){
+  if(S.sound!=="on") return;
+  try{
+    ac = ac || new (window.AudioContext||window.webkitAudioContext)();
+    if(ac.state==="suspended") ac.resume();
+    const oct=Math.floor(d/7), l=d%7, midi=12*(oct+1)+SEMI[l];
+    const f=440*Math.pow(2,(midi-69)/12), t=ac.currentTime+(wrong?0.05:0);
+    const out=ac.createGain(); out.gain.setValueAtTime(0.0001,t);
+    out.gain.exponentialRampToValueAtTime(0.35,t+0.015);
+    out.gain.exponentialRampToValueAtTime(0.0001,t+1.4);
+    out.connect(ac.destination);
+    [[1,"triangle",1],[2,"sine",0.35],[3,"sine",0.12]].forEach(([m,type,g])=>{
+      const o=ac.createOscillator(), gg=ac.createGain(); o.type=type; o.frequency.value=f*m; gg.gain.value=g;
+      o.connect(gg); gg.connect(out); o.start(t); o.stop(t+1.5);
+    });
+  }catch(e){}
+}
+
+// ---------- settings UI ----------
+document.querySelectorAll(".chips").forEach(box=>{
+  const key=box.dataset.set;
+  const sync=()=>box.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.v===S[key])));
+  box.addEventListener("click",e=>{
+    const b=e.target.closest(".chip"); if(!b) return;
+    S[key]=b.dataset.v; sync(); saveSettings(); drawDemo();
+  });
+  sync();
+});
+function saveSettings(){ try{ localStorage.setItem("onpu-settings", JSON.stringify(S)); }catch(e){} }
+let demoTimer=null, demoI=0;
+function drawDemo(){
+  const clef = S.clef==="mix" ? (demoI%2?"bass":"treble") : S.clef;
+  const [a,b]=RANGE[clef][+S.level];
+  const span=b-a+1, n=+S.count, start=a + (demoI*3)%Math.max(1,span-2), steps=[0,2,1];
+  const notes=[];
+  for(let i=0;i<n;i++){ const d=Math.min(b,start+steps[i]), l=d%7; notes.push({s:d-BASE[clef], color:`var(--n${l})`, label:NAMES[S.names][l]}); }
+  $("demo").innerHTML = staffSVG({clef, notes});
+}
+function startDemo(){ drawDemo(); clearInterval(demoTimer); demoTimer=setInterval(()=>{demoI++; drawDemo();},1600); }
+
+// ---------- quiz ----------
+let Q=null;
+function show(id){ ["start","quiz","result"].forEach(x=>$(x).hidden = x!==id); window.scrollTo(0,0); }
+
+function buildKeys(){
+  const n=NAMES[S.names], sub=NAMES[SUBS[S.names]];
+  $("keys").innerHTML = n.map((t,i)=>`<button class="key" style="--c:var(--n${i})" data-l="${i}" aria-label="${t}"><b>${t}</b><i>${sub[i]}</i></button>`).join("");
+}
+function pool(){
+  const clefs = S.clef==="mix"?["treble","bass"]:[S.clef], out=[];
+  clefs.forEach(c=>{ const [a,b]=RANGE[c][+S.level]; for(let d=a;d<=b;d++) out.push({clef:c,d}); });
+  return out;
+}
+function startQuiz(onlyItems){
+  clearInterval(demoTimer);
+  buildKeys();
+  const n=+S.count;
+  Q={items:onlyItems||pool(), n, total:+S.total, i:0, score:0, streak:0, missed:[], retry:[], group:null, pos:0, marks:[], prev:null, locked:false, practice:!!onlyItems};
+  if(onlyItems) Q.total = n===1 ? Math.max(10, onlyItems.length*2) : Math.max(5, onlyItems.length);
+  show("quiz"); ask();
+}
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+function makeGroup(){
+  let start;
+  if(Q.retry.length && Math.random()<0.4) start=Q.retry.splice(Math.floor(Math.random()*Q.retry.length),1)[0];
+  else { let tries=0; do{ start=rnd(Q.items); tries++; }
+         while(Q.n===1 && Q.prev && Q.items.length>1 && start.clef===Q.prev.clef && start.d===Q.prev.d && tries<20); }
+  const clef=start.clef, [a,b]=RANGE[clef][+S.level], g=[{clef,d:start.d}];
+  const steps=[1,1,1,2,2,2,3,3,4];
+  while(g.length<Q.n){
+    const last=g[g.length-1].d; let d, tries=0;
+    do{ d=last + rnd(steps)*(Math.random()<.5?-1:1); tries++; } while((d<a||d>b) && tries<40);
+    if(d<a||d>b) d = last<b ? last+1 : last-1;
+    g.push({clef,d});
+  }
+  // put the start note at a random position so missed notes are not always first
+  if(Q.n>1 && Math.random()<0.5) g.reverse();
+  Q.prev=g[0];
+  return g;
+}
+function resetKeys(){
+  $("keys").classList.remove("locked");
+  $("keys").querySelectorAll(".key").forEach(k=>{k.disabled=false;k.className="key";});
+  $("fb").textContent=""; $("fb").className="feedback";
+  $("next").hidden=true; $("hintBtn").hidden=false;
+}
+function ask(){
+  Q.group=makeGroup(); Q.pos=0; Q.marks=[]; Q.locked=false; Q.hint=false;
+  $("count").textContent=`${Q.i+1} / ${Q.total}`;
+  $("prog").style.width = (Q.i/Q.total*100)+"%";
+  $("clefName").textContent = CLEF_JA[Q.group[0].clef];
+  $("streak").textContent = Q.streak>=3 ? `${Q.streak}れんぞく！` : "";
+  resetKeys(); renderStage();
+}
+function renderStage(){
+  const notes=Q.group.map((c,i)=>{
+    const m=Q.marks[i], l=c.d%7;
+    return {s:c.d-BASE[c.clef], color:m?`var(--n${l})`:null, label:m?NAMES[S.names][l]:null, wrong:m&&!m.ok};
+  });
+  $("stage").innerHTML = staffSVG({clef:Q.group[0].clef, notes, cur:Q.pos, hint:Q.hint});
+}
+function answer(l){
+  if(!Q || Q.locked) return;
+  Q.locked=true;
+  const c=Q.group[Q.pos], right=c.d%7, ok = l===right, name=NAMES[S.names][right];
+  Q.marks[Q.pos]={l,ok};
+  const keys=$("keys").querySelectorAll(".key");
+  keys.forEach(k=>k.disabled=true);
+  $("keys").classList.add("locked");
+  keys[right].classList.add("right");
+  $("hintBtn").hidden=true;
+  renderStage();
+  play(c.d, !ok);
+  const last = Q.pos===Q.n-1;
+  if(ok){
+    Q.score++; Q.streak++;
+    $("fb").textContent = ["せいかい！","すごい！","ばっちり！","そのとおり！"][Math.floor(Math.random()*4)];
+    $("fb").className="feedback good";
+    setTimeout(step, last?900:450);
+  }else{
+    Q.streak=0;
+    keys[l].classList.add("wrong");
+    $("fb").textContent = `ざんねん、${name} だよ`;
+    $("fb").className="feedback bad";
+    if(!Q.missed.some(m=>m.clef===c.clef&&m.d===c.d)) Q.missed.push(c);
+    Q.retry.push(c);
+    $("next").hidden=false; $("next").focus();
+  }
+}
+function step(){
+  if(Q.pos < Q.n-1){
+    Q.pos++; Q.locked=false;
+    $("streak").textContent = Q.streak>=3 ? `${Q.streak}れんぞく！` : "";
+    resetKeys(); renderStage();
+  } else advance();
+}
+function advance(){
+  Q.i++;
+  if(Q.i>=Q.total) finish(); else ask();
+}
+function bestKey(){ return `onpu-best:${S.clef}:${S.level}:${S.count}:${S.total}`; }
+function finish(){
+  $("prog").style.width="100%";
+  const all=Q.total*Q.n, pct=Q.score/all;
+  $("rScore").textContent=Q.score; $("rTotal").textContent=` / ${all}`;
+  const stars = pct===1?3: pct>=0.8?2: pct>=0.5?1:0;
+  $("rStars").textContent = "★".repeat(stars)+"☆".repeat(3-stars);
+  $("rMsg").textContent = pct===1?"ぜんもんせいかい！":
+    pct>=0.8?"よくできました！": pct>=0.5?"あとすこし！":"れんしゅうすれば、きっとよめるよ";
+  let best=null;
+  if(!Q.practice){
+    try{ best=+(localStorage.getItem(bestKey())||0);
+      if(Q.score>best){ localStorage.setItem(bestKey(), Q.score); $("rBest").textContent="じこベスト こうしん！"; }
+      else $("rBest").textContent=`じこベスト: ${best} / ${all}`;
+    }catch(e){ $("rBest").textContent=""; }
+  } else $("rBest").textContent="まちがえた音の練習";
+  const hasMiss=Q.missed.length>0;
+  $("missWrap").hidden=!hasMiss; $("practice").hidden=!hasMiss;
+  $("missed").innerHTML = Q.missed.map(m=>{
+    const l=m.d%7;
+    return `<div class="miss">${staffSVG({clef:m.clef, notes:[{s:m.d-BASE[m.clef], color:`var(--n${l})`}], mini:true, w:220})}`+
+      `<div>${NAMES[S.names][l]}<small>${CLEF_JA[m.clef]}</small></div></div>`;
+  }).join("");
+  Q.lastMissed=Q.missed.slice();
+  show("result");
+}
+
+$("keys").addEventListener("click",e=>{ const k=e.target.closest(".key"); if(k) answer(+k.dataset.l); });
+$("next").addEventListener("click",step);
+$("hintBtn").addEventListener("click",()=>{ if(Q&&!Q.locked){ Q.hint=!Q.hint; renderStage(); }});
+$("go").addEventListener("click",()=>startQuiz());
+$("again").addEventListener("click",()=>startQuiz());
+$("practice").addEventListener("click",()=>startQuiz(Q.lastMissed));
+$("home").addEventListener("click",()=>{ show("start"); startDemo(); });
+$("quit").addEventListener("click",()=>{ show("start"); startDemo(); });
+document.addEventListener("keydown",e=>{
+  if($("quiz").hidden) return;
+  const n=+e.key;
+  if(n>=1&&n<=7) answer(n-1);
+  else if((e.key==="Enter"||e.key===" ") && !$("next").hidden){ e.preventDefault(); step(); }
+});
+startDemo();
+})();
+</script>
+</body>
+</html>
