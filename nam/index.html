@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nam の テスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Klee One", "Hiragino Kaku Gothic ProN", sans-serif; background: #fbf5f2; color: #2b2b2b; padding: 16px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header { display: flex; align-items: center; gap: 14px; background: #e2574c; color: white; border-radius: 16px; padding: 14px 18px; margin-bottom: 18px; }
+  header img { width: 56px; height: 56px; }
+  header h1 { font-size: 28px; font-weight: 600; }
+  header p { font-size: 14px; opacity: .9; }
+  .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .card { display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: inherit; background: white; border-radius: 14px; padding: 16px; border: 2px solid #f0dcd6; }
+  .card:active { transform: scale(.98); }
+  .card .tag { align-self: flex-start; font-size: 13px; font-weight: 600; color: white; background: #e2574c; border-radius: 8px; padding: 2px 10px; }
+  .card.sansu .tag { background: #3f9a4a; }
+  .card.sansu { border-color: #d5ead7; }
+  .card .t { font-size: 24px; font-weight: 600; }
+  .card .sub { font-size: 15px; color: #555; }
+  .card .date { font-size: 12px; color: #999; }
+  .hint { margin-top: 22px; font-size: 13px; color: #777; line-height: 1.8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><img src="assets/robokun.png" alt=""><div><h1>Nam の テスト</h1><p>やりたい　テストを　えらんでね</p></div></header>
+  <div class="list">
+    <a class="card kanji" href="kanji-01.html">
+      <span class="tag">こくご</span>
+      <span class="t">かん字テスト ①</span>
+      <span class="sub">1年 かん字 40じ（木〜月）</span>
+      <span class="date">2026-11-12</span>
+    </a>
+    <a class="card sansu" href="sansu-01.html">
+      <span class="tag">さんすう</span>
+      <span class="t">さんすうテスト ①</span>
+      <span class="sub">たしざん・ひきざん（20まで）</span>
+      <span class="date">2026-11-12</span>
+    </a></div>
+  <p class="hint">おうちの方へ：ペン・1本ゆびで書く／2本ゆびでスクロール。書いた内容はこの端末に保存されます（「ぜんぶ けす」で消去）。「こたえ」ボタンで答えのページを表示。</p>
+</div>
+</body>
+</html>
